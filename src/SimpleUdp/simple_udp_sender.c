@@ -1,6 +1,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -17,8 +18,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int ret;
-
     // IPv4のUDPソケットを作成する．
     int sock = socket(PF_INET, SOCK_DGRAM, 0);
     if(sock == -1) DieWithSystemMessage("socket()");
@@ -27,14 +26,17 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(12345);
-    ret = inet_pton(AF_INET, argv[1], &addr.sin_addr.s_addr);
-    if(ret != 1) DieWithSystemMessage("inet_pton()");
+    inet_pton(AF_INET, argv[1], &addr.sin_addr.s_addr);
 
     // データを送信する．
     int n = sendto(sock, "HELLO", 5, 0, (struct sockaddr *)&addr, sizeof(addr));
     if(n < 1) DieWithSystemMessage("sendto()");
 
-    printf("send\n");
+    // debug.
+    char buf[16];
+    memset(buf, 0, sizeof(buf));
+    inet_ntop(AF_INET, &addr.sin_addr, buf, sizeof(buf));
+    printf("send message to %s:%d\n", buf, ntohs(addr.sin_port));
 
     close(sock);
 
