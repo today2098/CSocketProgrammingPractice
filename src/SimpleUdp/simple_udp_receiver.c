@@ -11,7 +11,7 @@ int main() {
     int ret;
 
     // IPv4のUDPソケットを作成する．
-    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    int sock = socket(PF_INET, SOCK_DGRAM, 0);
     if(sock == -1) DieWithSystemMessage("socket()");
 
     // ソケットを設定する．
