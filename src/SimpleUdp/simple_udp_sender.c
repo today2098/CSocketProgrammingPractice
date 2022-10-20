@@ -31,6 +31,8 @@ int main(int argc, char *argv[]) {
     int n = sendto(sock, "HELLO", 5, 0, (struct sockaddr *)&addr, sizeof(addr));
     if(n < 1) DieWithSystemMessage("sendto()");
 
+    printf("send\n");
+
     close(sock);
 
     return 0;

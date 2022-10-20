@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <sys/socket.h>
@@ -28,8 +29,11 @@ int main() {
     int n = recvfrom(sock, buf, sizeof(buf) - 1, 0, (struct sockaddr *)&senderinfo, &addrlen);
     if(n == -1) DieWithSystemMessage("recvfrom()");
 
+    char buf2[16];
+    inet_ntop(AF_INET, &senderinfo.sin_addr, buf2, sizeof(buf2));
+    printf("receive from %s:%d\n", buf2, ntohs(senderinfo.sin_port));
     // write(fileno(stdout), buf, n);
-    printf("%s\n", buf);
+    printf("message: %s\n", buf);
 
     close(sock);
 
