@@ -1,7 +1,7 @@
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <errno.h>   // for errno.
+#include <stdio.h>   // for stderr, fprintf(), perror().
+#include <stdlib.h>  // for exit().
+#include <string.h>  // strerror().
 
 #include "./my_library.h"
 
