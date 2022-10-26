@@ -1,9 +1,9 @@
+#include "./die_with_message.h"
+
 #include <errno.h>   // for errno.
 #include <stdio.h>   // for stderr, fprintf(), perror().
 #include <stdlib.h>  // for exit().
 #include <string.h>  // strerror().
-
-#include "./my_library.h"
 
 void DieWithSystemMessage(const char *msg) {
     perror(msg);

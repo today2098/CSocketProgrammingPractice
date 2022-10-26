@@ -1,9 +1,9 @@
+#include "./make_directory.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
-#include "./my_library.h"
 
 void MakeDirectory(const char *dirpath) {
     int i;

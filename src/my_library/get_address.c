@@ -1,11 +1,10 @@
+#include "./get_address.h"
 
 #include <arpa/inet.h>   // for inet_ntop().
 #include <assert.h>      // for assert().
 #include <netinet/in.h>  // for sockaddr_in and ntohs().
 #include <stdio.h>       // snprintf().
 #include <string.h>      // for memset().
-
-#include "./my_library.h"
 
 void GetAddressFromSockaddr_in(struct sockaddr_in *addr, char *buf, size_t len) {
     assert(len >= 64);
