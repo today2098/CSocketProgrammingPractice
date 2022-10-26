@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     // ※コマンド"$ ip addr show"でIPアドレスを確認する．
     if(argc >= 4) {
         in_addr_t ifsipaddr;
-        ret = inet_pton(AF_INET, argv[3], &addr.sin_addr.s_addr);
+        ret = inet_pton(AF_INET, argv[3], &ifsipaddr);
         if(ret <= 0) DieWithSystemMessage("inet_pton()");
         ret = setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, (void *)&ifsipaddr, sizeof(ifsipaddr));
         if(ret == -1) DieWithSystemMessage("setsockopt()");
