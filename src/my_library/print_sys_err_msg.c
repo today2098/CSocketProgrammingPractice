@@ -5,6 +5,18 @@
 #include <stdlib.h>  // for exit().
 #include <string.h>  // strerror().
 
+void PrintSystemErrorMessage(const char *msg) {
+    perror(msg);
+    fprintf(stderr, "errno: %d\n", errno);
+    fflush(stderr);
+}
+
+void PrintSystemErrorMessage2(const char *msg, int no) {
+    fprintf(stderr, "%s: %s\n", msg, strerror(no));
+    fprintf(stderr, "errno: %d\n", no);
+    fflush(stderr);
+}
+
 void DieWithSystemMessage(const char *msg) {
     perror(msg);
     fprintf(stderr, "errno: %d\n", errno);
