@@ -3,6 +3,8 @@ Language: Cpp
 BasedOnStyle: Google
 
 AccessModifierOffset: -4
+# AlignConsecutiveAssignments: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 ColumnLimit: 0
 IndentWidth: 4
 SpaceBeforeParens: Never
