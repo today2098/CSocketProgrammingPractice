@@ -5,3 +5,6 @@ target_link_libraries(simple_ft_receiver.out my_library)
 
 add_executable(simple_ft_sender.out simple_ft_sender.c)
 target_link_libraries(simple_ft_sender.out my_library)
+
+add_executable(simple_ft_sender_with_name_resolution.out simple_ft_sender_with_name_resolution.c)
+target_link_libraries(simple_ft_sender_with_name_resolution.out my_library)
