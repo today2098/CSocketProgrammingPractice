@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <netinet/in.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -22,7 +23,7 @@ void *threadfunc(void *data) {
     int sock = cdata->sock;
     char buf0[MY_ADDRSTRLEN], buf[1024];
     int n;
-    int ret;
+    int i, ret;
 
     // クライアントからデータを取得する．
     memset(buf, 0, sizeof(buf));
@@ -36,6 +37,12 @@ void *threadfunc(void *data) {
     GetAddressFromSockaddr_in(&cdata->saddr, buf0, sizeof(buf0));
     printf("%s : %s\n", buf0, buf);
     fflush(stdout);
+
+    // データを変換する．
+    for(i = 0; i < n; ++i) {
+        if('A' <= buf[i] && buf[i] <= 'Z') buf[i] = tolower(buf[i]);
+        else if('a' <= buf[i] && buf[i] <= 'z') buf[i] = toupper(buf[i]);
+    }
 
     // データを返送する．
     n = write(sock, buf, n);
