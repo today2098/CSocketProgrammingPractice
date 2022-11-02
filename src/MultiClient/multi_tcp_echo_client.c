@@ -70,7 +70,10 @@ int main(int argc, char *argv[]) {
 
         // メッセージを入力する．
         memset(buf, 0, sizeof(buf));
-        scanf("%s", buf);
+        printf("please enter your message> ");
+        fflush(stdout);
+        fgets(buf, sizeof(buf), stdin);
+        if(strlen(buf) > 0) buf[strlen(buf) - 1] = '\0';  // fgets()は改行も読み込むので，終端文字に置き換える．
 
         // メッセージを送信する．
         ret = write(sock, buf, sizeof(buf));
