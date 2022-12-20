@@ -1,4 +1,4 @@
-#include "./make_directory.h"
+#include "make_directory.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -19,6 +19,7 @@ void MakeDirectory(const char *dirpath) {
         if(tmp[i] == '/') break;
         tmp[i] = 0;
     }
+
     for(i = 0; i < (int)len && tmp[i]; ++i) {
         if(tmp[i] == '/') {
             tmp[i] = 0;
