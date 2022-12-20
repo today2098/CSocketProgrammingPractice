@@ -1,9 +1,9 @@
-#include "./print_sys_err_msg.h"
+#include "print_sys_err_msg.h"
 
-#include <errno.h>   // for errno.
-#include <stdio.h>   // for stderr, fprintf(), fflush() and perror().
-#include <stdlib.h>  // for exit().
-#include <string.h>  // strerror().
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void PrintSystemErrorMessage(const char *msg) {
     perror(msg);
