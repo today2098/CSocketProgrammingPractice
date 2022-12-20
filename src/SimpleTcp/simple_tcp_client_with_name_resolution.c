@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "../my_library/my_library.h"  // for DieWithSystemMessage().
+#include "../my_library/my_library.h"
 
 int main(int argc, char *argv[]) {
     if(argc != 3) {
@@ -21,10 +21,13 @@ int main(int argc, char *argv[]) {
 
     char *hostname = argv[1];
     char *portnum = argv[2];
+    struct addrinfo hints, *res0, *res;
+    int sock;
+    char buf[32];
+    int n;
     int ret;
 
     // 名前解決を行う．
-    struct addrinfo hints, *res0;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
@@ -35,8 +38,6 @@ int main(int argc, char *argv[]) {
     }
 
     // コネクションに成功までリンクリストres0を走査する．
-    struct addrinfo *res;
-    int sock;
     for(res = res0; res; res = res->ai_next) {
         // ソケットを作成．
         sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
@@ -47,34 +48,33 @@ int main(int argc, char *argv[]) {
         if(ret == -1) {
             close(sock);
             sock = -1;
-            continue;
+            continue;  // 失敗したら次を試す．
         }
 
+        // debug.
         struct in_addr addr;
         addr.s_addr = ((struct sockaddr_in *)(res->ai_addr))->sin_addr.s_addr;
-        char buf[16];
+        char buf[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, &addr, buf, sizeof(buf));
-        int port = ntohs(((struct sockaddr_in *)(res->ai_addr))->sin_port);
-
-        printf("connect %s:%d\n", buf, port);
+        uint16_t port = ntohs(((struct sockaddr_in *)(res->ai_addr))->sin_port);
+        printf("connect to %s:%d\n", buf, port);
+        fflush(stdout);
         break;  // 接続に成功しているので，ループを終了．
     }
-
     freeaddrinfo(res0);
-
     if(sock < 0) {
         fprintf(stderr, "connection failed\n");
         return 1;
     }
 
     // サーバからデータを受信．
-    char buf[32];
     memset(buf, 0, sizeof(buf));
-    int n = read(sock, buf, sizeof(buf));
+    n = read(sock, buf, sizeof(buf));
     if(n == -1) DieWithSystemMessage("read()");
 
-    printf("receive message\n");
-    printf("content: %s\nsize: %d Byte\n", buf, n);
+    printf("receive massage\n");
+    printf("msg: %s\nsize: %d Byte\n", buf, n);
+    fflush(stdout);
 
     // ソケットを終了．
     close(sock);

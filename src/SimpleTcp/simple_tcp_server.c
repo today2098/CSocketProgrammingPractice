@@ -12,7 +12,6 @@
 int main() {
     int sock0, sock;
     struct sockaddr_in addr, client;
-    char buf[INET_ADDRSTRLEN];
     int ret, tmp;
 
     // Listen用のソケットを作成する．
@@ -20,8 +19,8 @@ int main() {
     if(sock0 == -1) DieWithSystemMessage("socket()");
 
     // Listen用ソケットの設定を行う．
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(12345);
+    addr.sin_family = AF_INET;          // アドレスファミリ．
+    addr.sin_port = htons(12345);       // ポート番号．
     addr.sin_addr.s_addr = INADDR_ANY;  // ワイルドカード．
     // ローカルIPアドレスとローカルポートをソケットに割り当てる．
     ret = bind(sock0, (struct sockaddr *)&addr, sizeof(addr));
@@ -31,7 +30,7 @@ int main() {
     ret = listen(sock0, 5);
     if(ret == -1) DieWithSystemMessage("listen()");
 
-    printf("listen\n");
+    printf("listen now...\n");
     fflush(stdout);
 
     // TCPクライアントからの接続要求を受け付ける．
@@ -40,6 +39,7 @@ int main() {
     if(sock == -1) DieWithSystemMessage("accept()");
 
     // debug.
+    char buf[INET_ADDRSTRLEN];
     memset(buf, 0, sizeof(buf));
     inet_ntop(AF_INET, &client.sin_addr, buf, sizeof(buf));
     if(buf == NULL) {
@@ -58,7 +58,7 @@ int main() {
         DieWithSystemMessage2("write()", tmp);
     }
 
-    printf("send mssage\n");
+    printf("send message\n");
     fflush(stdout);
 
     // TCPセッションを終了する．
