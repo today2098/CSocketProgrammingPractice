@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "../my_library/my_library.h"  // for DieWithSystemMessage().
+#include "../my_library/my_library.h"
 
 int main(int argc, char *argv[]) {
     if(argc != 3) {
@@ -22,10 +22,12 @@ int main(int argc, char *argv[]) {
 
     char *hostname = argv[1];
     char *portnum = argv[2];
+    struct addrinfo hints, *res0, *res;
+    int sock;
+    int n;
     int ret, tmp;
 
     // 名前解決を行う．
-    struct addrinfo hints, *res0;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = PF_UNSPEC;  // IPv4/IPv6の両方に対応させる．
     hints.ai_socktype = SOCK_DGRAM;
@@ -36,27 +38,23 @@ int main(int argc, char *argv[]) {
         DieWithSystemMessage2("getaddrinfo()", tmp);
     }
 
-    struct addrinfo *res;
-    int sock;
     for(res = res0; res; res = res->ai_next) {
         // ソケットを作成する．
         sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
         if(sock == -1) continue;  // 失敗したら次を試す．
 
-        // データを送信する．
-        int n = sendto(sock, "HELLO", 5, 0, res->ai_addr, res->ai_addrlen);
+        // メッセージを送信する．
+        n = sendto(sock, "HELLO", 5, 0, res->ai_addr, res->ai_addrlen);
         if(n < 1) DieWithSystemMessage("sendto()");
 
-        struct in_addr addr;
-        addr.s_addr = ((struct sockaddr_in *)(res->ai_addr))->sin_addr.s_addr;
-        char buf[64];
-        memset(buf, 0, sizeof(buf));
-        inet_ntop(AF_INET, &addr, buf, sizeof(buf));
-        int port = ntohs(((struct sockaddr_in *)(res->ai_addr))->sin_port);
-
-        printf("send message to %s:%d\n", buf, port);
+        // debug.
+        char buf[MY_ADDRSTRLEN];
+        GetAddressFromSockaddr_in((struct sockaddr_in *)res->ai_addr, buf, sizeof(buf));
+        printf("send message to %s\n", buf);
+        fflush(stdout);
 
         close(sock);
+        break;
     }
 
     freeaddrinfo(res0);
