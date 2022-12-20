@@ -8,14 +8,14 @@
 
 const unsigned MY_ADDRSTRLEN = 64;
 
-void GetAddressFromSockaddr_in(struct sockaddr_in *saddr, char *buf, size_t len) {
-    assert(len >= MY_ADDRSTRLEN);
+void GetAddressFromSockaddr_in(const struct sockaddr_in *src, char *dst, size_t size) {
+    assert(size >= MY_ADDRSTRLEN);
 
-    char buf2[MY_ADDRSTRLEN];
-    memset(buf2, 0, sizeof(buf2));
-    inet_ntop(saddr->sin_family, &(saddr->sin_addr), buf2, sizeof(buf2));
+    char buf[MY_ADDRSTRLEN];
+    memset(buf, 0, sizeof(buf));
+    inet_ntop(src->sin_family, &src->sin_addr, buf, sizeof(buf));
 
-    memset(buf, 0, len);
-    if(saddr->sin_family == AF_INET6) snprintf(buf, len, "[%s]:%d", buf2, ntohs(saddr->sin_port));
-    else snprintf(buf, len, "%s:%d", buf2, ntohs(saddr->sin_port));
+    memset(dst, 0, size);
+    if(src->sin_family == AF_INET6) snprintf(dst, size, "[%s]:%d", buf, ntohs(src->sin_port));
+    else snprintf(dst, size, "%s:%d", buf, ntohs(src->sin_port));
 }

@@ -7,6 +7,6 @@
 extern const unsigned MY_ADDRSTRLEN;
 
 // Get address from sockaddr_in by string.
-void GetAddressFromSockaddr_in(struct sockaddr_in *saddr, char *buf, size_t len);
+void GetAddressFromSockaddr_in(const struct sockaddr_in *src, char *dst, size_t size);
 
 #endif  // GET_ADDRESS_H
