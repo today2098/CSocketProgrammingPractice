@@ -10,6 +10,7 @@ C言語でのソケットプログラミングを勉強した際の成果物
 - [Usage](#usage)
    - [Install](#install)
    - [Build](#build)
+   - [Execution](#execution)
 - [Description](#description)
 - [Reference](#reference)
 
@@ -44,6 +45,23 @@ $ git clone https://github.com/today2098/CSocketProgrammingPractice.git
 $ cd CSocketProgrammingPractice
 $ ./build.sh
 ```
+
+
+
+<a id="execution"></a>
+### Execution
+
+各プロジェクトでは複数ユーザ間でソケット通信を行います．
+そのため動作を確認する際は，ターミナルを複数立ち上げ，同時にそれぞれ実行させてください．
+
+例えば "SimpleTcp" の場合，次のようにサーバ用とクライアント用の2つターミナルを用意します．
+サーバ側で "simple_tcp_server.out" を実行しサーバを立ち上げた後，クライアント側で "simple_tcp_client.out" を実行し，両者間で通信を行います．
+
+<!-- ![](figure/execution.png) -->
+
+<div align="center">
+  <img src="figure/execution.png" width="1000" title="実行の様子">
+</div>
 
 
 
