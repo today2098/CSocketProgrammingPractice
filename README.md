@@ -57,11 +57,7 @@ $ ./build.sh
 例えば "SimpleTcp" の場合，次のようにサーバ用とクライアント用の2つターミナルを用意します．
 サーバ側で "simple_tcp_server.out" を実行しサーバを立ち上げた後，クライアント側で "simple_tcp_client.out" を実行し，両者間で通信を行います．
 
-<!-- ![](figure/execution.png) -->
-
-<div align="center">
-  <img src="figure/execution.png" width="1000" title="実行の様子">
-</div>
+![](figure/execution.png "実行の様子")
 
 
 
