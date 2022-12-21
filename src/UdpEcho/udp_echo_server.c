@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "../my_library/my_library.h"
+#include "udp_echo.h"
 
 int main() {
     int ret;
@@ -24,8 +25,8 @@ int main() {
     if(ret == -1) DieWithSystemMessage("bind()");
 
     while(1) {
-        // データを受信する．
-        char buf[1024];
+        // メッセージを受信する．
+        char buf[BUF_SIZE];
         memset(buf, 0, sizeof(buf));
         struct sockaddr_in senderinfo;
         socklen_t addrlen = sizeof(senderinfo);
@@ -33,15 +34,17 @@ int main() {
         if(n == -1) DieWithSystemMessage("recvfrom()");
 
         // debug.
-        char buf0[64];
+        char buf0[MY_ADDRSTRLEN];
         GetAddressFromSockaddr_in(&senderinfo, buf0, sizeof(buf0));
-        printf("receive form %s\n", buf0);
+        printf("receive message from %s\n", buf0);
         printf("message: %s\n", buf);
         printf("size: %d Byte\n", n);
+        fflush(stdout);
 
-        // データを返送する．
+        // メッセージを返送する．
         sendto(sock, buf, n, 0, (struct sockaddr *)&senderinfo, addrlen);
         printf("return message\n");
+        fflush(stdout);
     }
 
     close(sock);

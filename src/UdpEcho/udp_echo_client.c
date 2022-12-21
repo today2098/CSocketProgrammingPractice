@@ -9,21 +9,21 @@
 #include <unistd.h>
 
 #include "../my_library/my_library.h"
+#include "udp_echo.h"
 
 int main(int argc, char *argv[]) {
     if(!(3 <= argc && argc <= 4)) {
         fprintf(stderr,
                 "UDP Echo Client\n\n"
-                "Usage:\n\t%s <hostname> <echo word> [port]\n\n"
-                "Example:\n\t%s localhost HELLO 12345\n",
+                "Usage:\n\t%s <echo word> <hostname> [port]\n\n"
+                "Example:\n\t%s HELLO localhost 12345\n",
                 argv[0], argv[0]);
         return 1;
     }
 
-    const size_t BUF_SIZE = 1024;
-    char *hostname = argv[1];
+    char *word = argv[1];
+    char *hostname = argv[2];
     char *portnum = (argc >= 4 ? argv[3] : "7");
-    char *word = argv[2];
     int ret, tmp;
 
     if(strlen(word) > BUF_SIZE - 1) {
@@ -44,22 +44,22 @@ int main(int argc, char *argv[]) {
     }
 
     struct addrinfo *res;
-    int sock;
     for(res = res0; res; res = res->ai_next) {
         // ソケットを作成する．
-        sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+        int sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
         if(sock == -1) continue;  // 失敗したら次を試す．
 
-        // データを送信する．
+        // メッセージを送信する．
         int n = sendto(sock, word, strlen(word), 0, res->ai_addr, res->ai_addrlen);
         if(n < 1) DieWithSystemMessage("sendto()");
 
         // debug.
-        char buf0[64];
+        char buf0[MY_ADDRSTRLEN];
         GetAddressFromSockaddr_in((struct sockaddr_in *)(res->ai_addr), buf0, sizeof(buf0));
         printf("send message to %s\n", buf0);
+        fflush(stdout);
 
-        // データを受信する．
+        // メッセージを受信する．
         char buf[BUF_SIZE];
         memset(buf, 0, sizeof(buf));
         struct sockaddr_in senderinfo;
@@ -72,6 +72,7 @@ int main(int argc, char *argv[]) {
         printf("receive message from %s\n", buf0);
         printf("message: %s\n", buf);
         printf("size: %d Byte\n", n);
+        fflush(stdout);
 
         // ソケットを終了する．
         close(sock);
