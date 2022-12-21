@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "../my_library/my_library.h"
+#include "simple_ft.h"
 
 int main(int argc, char *argv[]) {
     if(argc != 2) {
@@ -18,10 +19,10 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    const char *OUTPUT_DIR = "output/";
+    const char OUTPUT_DIR[] = "output/";
     int sock0, sock;
     int fd;
-    char buf0[64], buf[65536];
+    char buf[65536];
     int n, ret;
 
     // Listen用のソケットを作成する．
@@ -32,7 +33,7 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(12345);
+    addr.sin_port = htons(PORT);
     addr.sin_addr.s_addr = INADDR_ANY;
     ret = bind(sock0, (struct sockaddr *)&addr, sizeof(addr));
     if(ret == -1) DieWithSystemMessage("bind()");
@@ -49,10 +50,11 @@ int main(int argc, char *argv[]) {
     if(sock == -1) DieWithSystemMessage("accept()");
 
     // debug.
+    char buf0[MY_ADDRSTRLEN];
     GetAddressFromSockaddr_in(&client, buf0, sizeof(buf0));
     printf("accept from %s\n", buf0);
 
-    // ファイルを作成する．
+    // 空ファイルを作成する．
     char filepath[256];
     memset(filepath, 0, sizeof(filepath));
     snprintf(filepath, sizeof(filepath), "%s%s", OUTPUT_DIR, argv[1]);
@@ -66,7 +68,7 @@ int main(int argc, char *argv[]) {
     while((n = read(sock, buf, sizeof(buf))) > 0) {
         ret = write(fd, buf, n);
         if(ret < 1) DieWithSystemMessage("write()");
-        printf("[%d] send %d Byte\n", cnt++, n);
+        printf("[%d] receive %d Byte\n", cnt++, n);
     }
     if(n == -1) DieWithSystemMessage("read()");
 

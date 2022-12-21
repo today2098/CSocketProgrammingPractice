@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "../my_library/my_library.h"
+#include "simple_ft.h"
 
 int main(int argc, char *argv[]) {
     if(argc != 2) {
@@ -20,10 +21,11 @@ int main(int argc, char *argv[]) {
 
     int fd;
     int sock;
-    char buf0[64], buf[65536];
-    int n, ret;
+    char buf[65536];
+    int n;
+    int ret, tmp;
 
-    // 送信ファイルを開く．
+    // 送信するファイルを開く．
     fd = open(argv[1], O_RDONLY);
     if(fd == -1) DieWithSystemMessage("open()");
 
@@ -35,7 +37,7 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in server;
     memset(&server, 0, sizeof(server));
     server.sin_family = AF_INET;
-    server.sin_port = htons(12345);
+    server.sin_port = htons(PORT);
     ret = inet_pton(AF_INET, "127.0.0.1", &server.sin_addr.s_addr);
     if(ret <= 0) DieWithSystemMessage("inet_pton()");
 
@@ -44,6 +46,7 @@ int main(int argc, char *argv[]) {
     if(ret == -1) DieWithSystemMessage("connect()");
 
     // debug.
+    char buf0[MY_ADDRSTRLEN];
     GetAddressFromSockaddr_in(&server, buf0, sizeof(buf0));
     printf("connect to %s\n", buf0);
 
@@ -54,8 +57,11 @@ int main(int argc, char *argv[]) {
         ret = write(sock, buf, n);
         if(ret < 1) DieWithSystemMessage("write()");
         printf("[%d] send %d Byte\n", cnt++, n);
+        fflush(stdout);
     }
     if(n == -1) DieWithSystemMessage("read()");
+    printf("transmission complete\n");
+    fflush(stdout);
 
     // TCPセッションを終了する．
     close(sock);
