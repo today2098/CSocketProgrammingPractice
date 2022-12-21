@@ -6,5 +6,5 @@ target_link_libraries(simple_tcp_server.out my_library)
 add_executable(simple_tcp_client.out simple_tcp_client.c)
 target_link_libraries(simple_tcp_client.out my_library)
 
-add_executable(simple_tcp_client_with_name_resolution.out simple_tcp_client_with_name_resolution.c)
-target_link_libraries(simple_tcp_client_with_name_resolution.out my_library)
+add_executable(simple_tcp_client_with_nr.out simple_tcp_client_with_nr.c)
+target_link_libraries(simple_tcp_client_with_nr.out my_library)
